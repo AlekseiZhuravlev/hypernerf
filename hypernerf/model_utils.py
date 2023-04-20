@@ -21,6 +21,7 @@ from flax import struct
 from jax import lax
 from jax import random
 import jax.numpy as jnp
+import numpy as np
 
 
 @struct.dataclass
@@ -111,7 +112,7 @@ def volumetric_rendering(rgb,
   last_sample_z = 1e10 if sample_at_infinity else 1e-19
   dists = jnp.concatenate([
       z_vals[..., 1:] - z_vals[..., :-1],
-      jnp.broadcast_to([last_sample_z], z_vals[..., :1].shape)
+      jnp.broadcast_to(np.array([last_sample_z]), z_vals[..., :1].shape)
   ], -1)
   dists = dists * jnp.linalg.norm(dirs[..., None, :], axis=-1)
   alpha = 1.0 - jnp.exp(-sigma * dists)

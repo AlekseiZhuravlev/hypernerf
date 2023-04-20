@@ -4,8 +4,8 @@ max_steps = 250000
 lr_decay_steps = %max_steps
 
 image_scale = 4
-batch_size = 6144
-eval_batch_size = 8096
+batch_size = 512
+eval_batch_size = 8192
 init_lr = 0.001
 final_lr = 0.0001
 elastic_init_weight = 0.001
@@ -27,7 +27,7 @@ NerfModel.use_rgb_condition = True
 spatial_point_min_deg = 0
 spatial_point_max_deg = 8
 
-# Hyper configs.
+# Hyper point configs.
 hyper_num_dims = 2
 hyper_point_min_deg = 0
 hyper_point_max_deg = 1
@@ -40,6 +40,7 @@ NerfModel.hyper_slice_method = 'bendy_sheet'
 NerfModel.hyper_sheet_mlp_cls = @HyperSheetMLP
 NerfModel.hyper_use_warp_embed = True
 
+# Hyper sheet MLP config.
 hyper_sheet_min_deg = 0
 hyper_sheet_max_deg = 6
 HyperSheetMLP.min_deg = %hyper_sheet_min_deg
@@ -47,7 +48,7 @@ HyperSheetMLP.max_deg = %hyper_sheet_max_deg
 HyperSheetMLP.output_channels = %hyper_num_dims
 TrainConfig.hyper_sheet_alpha_schedule = ('constant', %hyper_sheet_max_deg)
 
-# Warp config.
+# Warp config. Deformation field?
 NerfModel.use_warp = True
 warp_min_deg = 0
 warp_max_deg = 6
