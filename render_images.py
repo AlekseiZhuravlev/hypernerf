@@ -34,8 +34,6 @@ def myprint(msg, *args, **kwargs):
     print(msg % args)
 
 
-
-
 if __name__ == '__main__':
 
 
@@ -51,12 +49,14 @@ if __name__ == '__main__':
     os.chdir("/home/azhuavlev/PycharmProjects/hypernerf/")
 
     # @markdown The working directory where the trained model is.
-    train_dir = '/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_03/'  # @param {type: "string"}
+    train_dir = '/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_09_warp'  # @param {type: "string"}
     # @markdown The directory to the dataset capture.
     data_dir = '/itet-stor/azhuavlev/net_scratch/Projects/Data/HyperNerf/hand1-dense-v2/'  # @param {type: "string"}
 
     camera_path = '/itet-stor/azhuavlev/net_scratch/Projects/Data/HyperNerf/hand1-dense-v2/camera/'  # @param {type: 'string'}
-    images_path = Path(train_dir, 'renders')
+    images_path = Path(train_dir, 'images')
+    images_path.mkdir(exist_ok=True, parents=True)
+
     config_path = Path(train_dir, 'config.gin')
 
 
@@ -95,7 +95,9 @@ if __name__ == '__main__':
 
 
     # Load the pre-trained model.
+
     rng = random.PRNGKey(exp_config.random_seed)
+
     np.random.seed(exp_config.random_seed + jax.process_index())
     devices_to_use = jax.devices()
 
@@ -137,6 +139,11 @@ if __name__ == '__main__':
 
     logging.info('Restoring checkpoint from %s', checkpoint_dir)
     state = checkpoints.restore_checkpoint(checkpoint_dir, state)
+
+    print('Model state restored from checkpoint.')
+    print('state', state)
+
+
     step = state.optimizer.state.step + 1
     state = jax_utils.replicate(state, devices=devices_to_use)
     del params
@@ -193,10 +200,16 @@ if __name__ == '__main__':
         print(f'Rendering frame {i + 1}/{len(test_cameras)}')
         camera = test_cameras[i]
         batch = datasets.camera_to_rays(camera)
+
+        # TODO experiment with this
         batch['metadata'] = {
             'appearance': jnp.zeros_like(batch['origins'][..., 0, jnp.newaxis], jnp.uint32),
             'warp': jnp.zeros_like(batch['origins'][..., 0, jnp.newaxis], jnp.uint32),
         }
+        # print(batch)
+        print("batch['origins'].shape", batch['origins'].shape)
+        print("batch['metadata']['warp'].shape", batch['metadata']['warp'].shape)
+        exit(0)
 
         # Render the image.
         render = render_fn(state, batch, rng=rng)
@@ -212,6 +225,3 @@ if __name__ == '__main__':
                             path=Path(images_path, f'frame_{i:04d}.png'))
 
         frames.append(image_utils.image_to_uint8(frame))
-
-    # Save the video.
-    mediapy.write_video(path=Path(images_path, f'video.mp4'), images=frames, fps=15)

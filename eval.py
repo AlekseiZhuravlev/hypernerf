@@ -349,9 +349,18 @@ def main(argv):
       use_time=dummy_model.warp_embed_key == 'time')
 
   # Get training IDs to evaluate.
-  train_eval_ids = utils.strided_subset(
-      datasource.train_ids, eval_config.num_train_eval)
+  if eval_config.num_train_eval == -1:
+    train_eval_ids = datasource.train_ids
+  else:
+      # write code to choose eval_config.num_train_eval instances of datasource.train_ids, uniformly spaced
+      idx = np.round(np.linspace(0, len(datasource.train_ids) - 1, eval_config.num_train_eval)).astype(int)
+      train_eval_ids = np.array(datasource.train_ids)[idx]
+      logging.info('train_eval_ids = %s', train_eval_ids)
+
+      # train_eval_ids = utils.strided_subset(
+      #     datasource.train_ids, eval_config.num_train_eval)
   train_eval_iter = datasource.create_iterator(train_eval_ids, batch_size=0)
+
   val_eval_ids = utils.strided_subset(
       datasource.val_ids, eval_config.num_val_eval)
   if val_eval_ids:
@@ -428,6 +437,11 @@ def main(argv):
       continue
 
     save_dir = renders_dir if eval_config.save_output else None
+
+    if save_dir:
+      delete_old_renders(renders_dir, eval_config.max_render_checkpoints)
+
+
     if val_eval_iter:
       process_iterator(
           tag='val',
@@ -466,9 +480,6 @@ def main(argv):
                        save_dir=save_dir,
                        datasource=datasource,
                        model=model)
-
-    if save_dir:
-      delete_old_renders(renders_dir, eval_config.max_render_checkpoints)
 
     if eval_config.eval_once:
       break
