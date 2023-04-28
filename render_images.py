@@ -209,7 +209,7 @@ if __name__ == '__main__':
         # print(batch)
         print("batch['origins'].shape", batch['origins'].shape)
         print("batch['metadata']['warp'].shape", batch['metadata']['warp'].shape)
-        exit(0)
+        # exit(0)
 
         # Render the image.
         render = render_fn(state, batch, rng=rng)

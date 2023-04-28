@@ -8,15 +8,14 @@ import numpy as np
 
 from hypernerf import image_utils
 
-def load_all_images_from_dir(experiment_path):
+def load_all_images_from_dir(img_dir, extention='png'):
     """Load rendered images from a directory.
     Args:
         experiment_path: Path to the experiment directory.
     Returns:
         A list of images.
     """
-    img_dir = experiment_path / 'images'
-    img_paths = sorted(img_dir.glob('*.png'))
+    img_paths = sorted(img_dir.glob(f'*.{extention}'))
     images = [image_utils.load_image(path) for path in img_paths]
     return images
 
@@ -40,7 +39,7 @@ def load_depth_rgb_from_eval_dir(experiment_path, sub_dir='renders/00250000/trai
     return rgb_images, depth_images, img_ids
 
 
-def load_ground_truth_images(img_dir, img_ids=None):
+def load_ground_truth_images(img_dir, img_ids=None, img_ext='png'):
     """Load rendered images from a directory.
     Args:
         img_dir: Path to the directory with ground truth images.
@@ -50,9 +49,9 @@ def load_ground_truth_images(img_dir, img_ids=None):
     """
     # load images with ids from img_ids
     if img_ids is not None:
-        img_paths = [img_dir / f'{img_id}.png' for img_id in img_ids]
+        img_paths = [img_dir / f'{img_id}.{img_ext}' for img_id in img_ids]
     else:
-        img_paths = sorted(img_dir.glob('*.png'))
+        img_paths = sorted(img_dir.glob(f'*.{img_ext}'))
 
     images = [image_utils.load_image(path) for path in img_paths]
     return images
@@ -125,6 +124,7 @@ def render_video_from_render_images_script():
 
 
 if __name__ == '__main__':
+
     experiment_path = Path('/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_09_warp/')
 
     rgb_images, depth_images, image_ids = load_depth_rgb_from_eval_dir(experiment_path)

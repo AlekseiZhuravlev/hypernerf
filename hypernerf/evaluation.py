@@ -76,6 +76,15 @@ def render_image(
   """
   batch_shape = rays_dict['origins'].shape[:-1]
   num_rays = np.prod(batch_shape)
+
+  # print("rays_dict['origins'].shape", rays_dict['origins'].shape)
+  # print('batch_shape', batch_shape)
+  # print('num_rays', num_rays)
+
+  # for key in rays_dict.keys():
+  #   print('rays_dict[{}].shape'.format(key), rays_dict[key].shape)
+  # print('rays_dict.keys()', rays_dict.keys())
+
   rays_dict = tree_util.tree_map(lambda x: x.reshape((num_rays, -1)), rays_dict)
   _, key_0, key_1 = jax.random.split(rng, 3)
   key_0 = jax.random.split(key_0, device_count)

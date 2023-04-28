@@ -63,6 +63,7 @@ def compute_multiscale_ssim(image1: jnp.ndarray, image2: jnp.ndarray):
   """Compute the multiscale SSIM metric."""
   image1 = tf.convert_to_tensor(image1)
   image2 = tf.convert_to_tensor(image2)
+
   return tf.image.ssim_multiscale(image1, image2, max_val=1.0)
 
 
@@ -90,6 +91,9 @@ def compute_stats(batch, model_out):
     rgb_target = batch['rgb'][..., :3]
     mse = ((rgb - batch['rgb'][..., :3])**2).mean()
     psnr = utils.compute_psnr(mse)
+
+    # print('rgb_target.shape', rgb_target.shape, 'rgb.shape', rgb.shape)
+
     ssim = compute_ssim(rgb_target, rgb)
     ms_ssim = compute_multiscale_ssim(rgb_target, rgb)
     stats['mse'] = mse

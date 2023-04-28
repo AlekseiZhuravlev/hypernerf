@@ -73,6 +73,8 @@ ExperimentConfig.datasource_cls = @NerfiesDataSource
 NerfiesDataSource.data_dir = %data_dir
 NerfiesDataSource.image_scale = %image_scale
 
+
+
 # Common configs.
 NerfModel.use_viewdirs = True
 NerfModel.use_stratified_sampling = True

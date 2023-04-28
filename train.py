@@ -145,6 +145,8 @@ def main(argv):
   # Load configurations.
   exp_config = configs.ExperimentConfig()
   train_config = configs.TrainConfig()
+  # datasource_config = configs.NerfiesDataSource()
+
   dummy_model = models.NerfModel({}, 0, 0)
 
   # Get directory information.
@@ -189,14 +191,12 @@ def main(argv):
       image_scale=exp_config.image_scale,
       random_seed=exp_config.random_seed,
       # Enable metadata based on model needs.
-      use_warp_id=dummy_model.use_warp,
-      use_appearance_id=(
-          dummy_model.nerf_embed_key == 'appearance'
-          or dummy_model.hyper_embed_key == 'appearance'),
-      use_camera_id=dummy_model.nerf_embed_key == 'camera',
-      use_time=dummy_model.warp_embed_key == 'time')
+      use_warp_id=True, # datasource_config.use_warp_id,
+      use_appearance_id=True, #datasource_config.use_appearance_id,
+      use_camera_id=False, #datasource_config.use_camera_id,
+      use_time=True)#datasource_config.use_time)
 
-  # Create Model.
+  # Create Model.`
   logging.info('Initializing models.')
   rng, key = random.split(rng)
   params = {}
@@ -345,7 +345,7 @@ def main(argv):
         logging.info('\tfine metrics: %s', fine_metrics_str)
 
     if step % train_config.save_every == 0 and jax.process_index() == 0:
-      training.save_checkpoint(checkpoint_dir, state, keep=2)
+      training.save_checkpoint(checkpoint_dir, state, keep=20)
 
     if step % train_config.log_every == 0 and jax.process_index() == 0:
       # Only log via process 0.
