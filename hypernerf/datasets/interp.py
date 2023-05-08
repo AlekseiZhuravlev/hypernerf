@@ -89,7 +89,9 @@ class InterpDataSource(core.DataSource):
       test_camera_trajectory='orbit-mild',
       **kwargs):
     self.data_dir = gpath.GPath(data_dir)
-    if interval < 2 or interval % 2 != 0:
+
+    # TODO changed interval < 2 to interval < 1
+    if interval < 1 or interval % 2 != 0:
       raise ValueError('interval must be a positive even number.')
     all_ids = _load_dataset_ids(self.data_dir)
     if interval > len(all_ids) - 1:
@@ -204,7 +206,13 @@ class InterpDataSource(core.DataSource):
       right_ts = float(self.metadata_dict[right_id]['time_id'])
       # Compute what interval the middle frame lies on between the left
       # and right frames. This should be between 0 and 1.
-      progression = (item_ts - left_ts) / (right_ts - left_ts)
+      # print('item_ts, left_ts, right_ts')
+      # print(item_ts, left_ts, right_ts)
+
+      if left_ts == right_ts:
+        progression = 0.0
+      else:
+        progression = (item_ts - left_ts) / (right_ts - left_ts)
       assert 0.0 <= progression <= 1.0
       left_metadata = self.train_metadata_ids[left_id]
       right_metadata = self.train_metadata_ids[right_id]

@@ -1,13 +1,15 @@
 include 'configs/defaults.gin'
 
-max_steps = 250000
+max_steps = 500000
 lr_decay_steps = %max_steps
 
 image_scale = 4
 batch_size = 512
-eval_batch_size = 8192
-init_lr = 0.001
-final_lr = 0.0001
+eval_batch_size = 512
+
+# increased from 0.001
+init_lr = 0.005
+final_lr = 0.0005
 elastic_init_weight = 0.001
 TrainConfig.lr_schedule = %DEFAULT_LR_SCHEDULE
 
@@ -43,8 +45,8 @@ NerfModel.hyper_use_warp_embed = True
 
 # Hyper sheet MLP config.
 hyper_sheet_min_deg = 0
-#hyper_sheet_max_deg = 6
-hyper_sheet_max_deg = 90
+hyper_sheet_max_deg = 6
+
 
 HyperSheetMLP.min_deg = %hyper_sheet_min_deg
 HyperSheetMLP.max_deg = %hyper_sheet_max_deg
@@ -54,7 +56,9 @@ TrainConfig.hyper_sheet_alpha_schedule = ('constant', %hyper_sheet_max_deg)
 # Warp config. Deformation field?
 NerfModel.use_warp = True
 warp_min_deg = 0
-warp_max_deg = 6
+
+# increased from 6
+warp_max_deg = 10
 
 warp_alpha_steps = 80000
 TrainConfig.warp_alpha_schedule = {
@@ -66,7 +70,7 @@ TrainConfig.warp_alpha_schedule = {
 
 TrainConfig.use_weight_norm = False
 TrainConfig.use_elastic_loss = False
-TrainConfig.use_background_loss = True
+TrainConfig.use_background_loss = False
 TrainConfig.background_loss_weight = 1.0
 
 TrainConfig.use_warp_reg_loss = False
@@ -78,13 +82,14 @@ TrainConfig.elastic_loss_weight_schedule = {
   'value': %elastic_init_weight,
 }
 
-
 TrainConfig.print_every = 100
 TrainConfig.log_every = 100
 TrainConfig.histogram_every = 1000
 TrainConfig.save_every = 10000
 
-EvalConfig.num_val_eval = None
-EvalConfig.num_train_eval = None
-EvalConfig.eval_once = False
 EvalConfig.save_output = True
+EvalConfig.chunk = 1024
+EvalConfig.eval_once = True
+EvalConfig.num_train_eval = 100
+EvalConfig.num_test_eval = 100
+eval_batch_size = 512

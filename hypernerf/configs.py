@@ -143,7 +143,7 @@ class EvalConfig:
   # If True save the predicted images to persistent storage.
   save_output: bool = True
   # The evaluation batch size.
-  chunk: int = 8192
+  chunk: int = 512
   # Max render checkpoints. The renders will rotate after this many.
   max_render_checkpoints: int = 3
 

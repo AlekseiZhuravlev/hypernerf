@@ -148,6 +148,11 @@ def main(argv):
   # datasource_config = configs.NerfiesDataSource()
 
   dummy_model = models.NerfModel({}, 0, 0)
+  print('dummy_model')
+  print('use_warp_id', dummy_model.use_warp)
+  print('use_appearance_id', dummy_model.nerf_embed_key == 'appearance' or dummy_model.hyper_embed_key == 'appearance')
+  print('use_camera_id', dummy_model.nerf_embed_key == 'camera')
+  print('use_time', dummy_model.warp_embed_key == 'time')
 
   # Get directory information.
   exp_dir = gpath.GPath(FLAGS.base_folder)
@@ -194,7 +199,7 @@ def main(argv):
       use_warp_id=True, # datasource_config.use_warp_id,
       use_appearance_id=True, #datasource_config.use_appearance_id,
       use_camera_id=False, #datasource_config.use_camera_id,
-      use_time=True)#datasource_config.use_time)
+      use_time=False)#datasource_config.use_time)
 
   # Create Model.`
   logging.info('Initializing models.')
@@ -345,7 +350,7 @@ def main(argv):
         logging.info('\tfine metrics: %s', fine_metrics_str)
 
     if step % train_config.save_every == 0 and jax.process_index() == 0:
-      training.save_checkpoint(checkpoint_dir, state, keep=20)
+      training.save_checkpoint(checkpoint_dir, state, keep=100)
 
     if step % train_config.log_every == 0 and jax.process_index() == 0:
       # Only log via process 0.

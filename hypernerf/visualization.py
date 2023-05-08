@@ -15,6 +15,7 @@
 """Visualization utilities."""
 import contextlib
 import functools
+import logging
 
 from matplotlib import cm
 from matplotlib import pyplot as plt
@@ -192,7 +193,16 @@ def interpolate_colormap(values, colormap):
 
 
 def scale_values(values, vmin, vmax, eps=1e-6):
-  return (values - vmin) / max(vmax - vmin, eps)
+    # print('scale_values, values.shape: ', values.shape)
+    # print('scale_values, vmin: ', vmin)
+    # print('scale_values, vmax: ', vmax)
+    #
+    # logging.info('scale_values, values.shape: %s', values.shape)
+    # logging.info('scale_values, vmin: %s', vmin)
+    # logging.info('scale_values, vmax: %s', vmax)
+
+
+    return (values - vmin) / max(vmax - vmin, eps)
 
 
 def colorize(array,

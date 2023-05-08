@@ -1,6 +1,5 @@
 import json
 import os
-import pathlib
 import pickle
 
 import numpy as np
@@ -9,8 +8,6 @@ from tqdm import tqdm
 
 import sys
 sys.path.append('../..')
-
-import make_video
 
 
 class InterhandToNerfiesConverter:

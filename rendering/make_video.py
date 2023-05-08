@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -6,6 +7,7 @@ import cv2
 import mediapy
 import numpy as np
 
+sys.path.append('..')
 from hypernerf import image_utils
 
 def load_all_images_from_dir(img_dir, extention='png'):
@@ -125,14 +127,25 @@ def render_video_from_render_images_script():
 
 if __name__ == '__main__':
 
-    experiment_path = Path('/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_09_warp/')
+    experiment_path = Path('/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_17_ho3d_200/')
+# '/home/azhuavlev/Desktop/Projects/Results/HyperNerf/Exp_17_ho3d_200/renders/00200000/train/train/'
+    rgb_images, depth_images, image_ids = load_depth_rgb_from_eval_dir(
+        experiment_path,
+        sub_dir='renders/00200000/train/train/'
+    )
+    print('Loaded rendered images')
 
-    rgb_images, depth_images, image_ids = load_depth_rgb_from_eval_dir(experiment_path)
+#/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_17_ho3d_200/ --gin_bindings="data_dir='
+#/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_16_interhand/ --gin_bindings="data_dir='/itet-stor/azhuavlev/net_scratch/Projects/Data/InterHand_Nerfies_format/04/'"
 
     gt_images = load_ground_truth_images(
-        Path('/itet-stor/azhuavlev/net_scratch/Projects/Data/HyperNerf/hand1-dense-v2/rgb/4x/'),
-        image_ids
+        # Path('/home/azhuavlev/Desktop/Projects/Data/InterHand_Nerfies_format/03/rgb/4x/'),
+        Path('/home/azhuavlev/Desktop/Projects/Data/HO3D_nerfies/02/rgb/4x/'),
+        image_ids,
+        img_ext='png'
     )
+
+    print('Loaded ground truth images')
 
     for i in range(len(gt_images)):
         gt_images[i] = put_text_on_image(gt_images[i], f'Ground truth')

@@ -46,7 +46,7 @@ if __name__ == '__main__':
     print('Current working directory:', Path.cwd())
 
     # change working directory to /home/azhuavlev/PycharmProjects/hypernerf/
-    os.chdir("/home/azhuavlev/PycharmProjects/hypernerf/")
+    os.chdir("//")
 
     # @markdown The working directory where the trained model is.
     train_dir = '/itet-stor/azhuavlev/net_scratch/Projects/Results/HyperNerf/Exp_09_warp'  # @param {type: "string"}

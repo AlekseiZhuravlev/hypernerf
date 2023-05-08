@@ -15,7 +15,7 @@ TrainConfig.lr_schedule = %DEFAULT_LR_SCHEDULE
 ExperimentConfig.datasource_cls = @InterpDataSource
 InterpDataSource.data_dir = %data_dir
 InterpDataSource.image_scale = %image_scale
-InterpDataSource.interval = 4
+InterpDataSource.interval = 2
 
 # Basic model config.
 NerfModel.num_coarse_samples = 128
@@ -88,7 +88,8 @@ TrainConfig.histogram_every = 5000
 TrainConfig.save_every = 10000
 
 EvalConfig.save_output = True
-EvalConfig.chunk = 2048
+EvalConfig.chunk = 1024
 EvalConfig.eval_once = True
-EvalConfig.num_train_eval = -1
+EvalConfig.num_train_eval = 100
+EvalConfig.num_test_eval = 100
 eval_batch_size = 512
